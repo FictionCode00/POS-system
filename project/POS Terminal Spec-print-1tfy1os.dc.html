@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-print-defaults>
+@media print {
+  @page { margin: 0; }
+  body { padding: 0.5in; box-sizing: border-box; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, table, pre, blockquote, img, svg, tr, [class~="card" i] { break-inside: avoid; }
+  img, svg { max-width: 100%; }
+  p { orphans: 3; widows: 3; }
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+</style>
+</helmet>
+
+<div style="width:max-content;min-width:100%;min-height:100vh;box-sizing:border-box;padding:56px;background:#e7e5df;font-family:'Space Grotesk',sans-serif;color:#1A1A22;">
+
+  <!-- ============ DOC HEADER ============ -->
+  <div style="max-width:900px;margin-bottom:48px;">
+    <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#9a9aa8;margin-bottom:12px;">Restaurant OS · Phase 1 MVP · POS Terminal</div>
+    <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:40px;line-height:1.05;margin:0 0 14px;letter-spacing:-0.02em;">POS Terminal — Design Spec</h1>
+    <p style="margin:0 0 18px;font-size:15.5px;line-height:1.6;color:#5a5a68;max-width:780px;">Direction <strong>B · Dense Data-Forward</strong>, committed. Electric-indigo accent, Space Grotesk throughout, soft elevation, xl–2xl radii. Two genuinely different layouts — a counter <strong>Tablet</strong> (zero-scroll shell) and a handheld <strong>Phone</strong> (collapsible cart) — sharing one token system. Annotated screens, states, and an add-to-cart storyboard for engineering to build against.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <span style="font-size:12.5px;background:#fff;border:1px solid #E4E4ED;border-radius:999px;padding:6px 14px;color:#4a4868;">Tablet ≥768px · landscape</span>
+      <span style="font-size:12.5px;background:#fff;border:1px solid #E4E4ED;border-radius:999px;padding:6px 14px;color:#4a4868;">Phone ≤480px · portrait</span>
+      <span style="font-size:12.5px;background:#fff;border:1px solid #E4E4ED;border-radius:999px;padding:6px 14px;color:#4a4868;">Accent #4F46E5</span>
+      <span style="font-size:12.5px;background:#fff;border:1px solid #E4E4ED;border-radius:999px;padding:6px 14px;color:#4a4868;">GST 2.5% + 2.5%</span>
+    </div>
+  </div>
+
+  <!-- ============ SECTION: TOKENS ============ -->
+  <div style="margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+    <span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;color:#fff;background:#1A1A22;border-radius:8px;padding:5px 11px;">01</span>
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0;letter-spacing:-0.01em;">Design Tokens</h2>
+  </div>
+  <div style="background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(20,20,40,0.06);padding:34px;margin-bottom:56px;width:1180px;">
+
+    <!-- COLORS -->
+    <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9aa8;margin-bottom:16px;">Color</div>
+    <div style="display:flex;flex-direction:column;gap:22px;margin-bottom:36px;">
+      <div>
+        <div style="font-size:13px;color:#6a6a78;margin-bottom:10px;font-weight:600;">Primary — Electric Indigo</div>
+        <div style="display:flex;gap:14px;">
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#EEF0FF;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/50</div><div style="font-size:11.5px;color:#9a9aa8;">#EEF0FF</div></div>
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#E7E6FB;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/100</div><div style="font-size:11.5px;color:#9a9aa8;">#E7E6FB</div></div>
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#A7A2F0;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/300</div><div style="font-size:11.5px;color:#9a9aa8;">#A7A2F0</div></div>
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#4F46E5;box-shadow:0 4px 12px rgba(79,70,229,0.3);"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/600 ·base</div><div style="font-size:11.5px;color:#9a9aa8;">#4F46E5</div></div>
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#4338CA;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/700</div><div style="font-size:11.5px;color:#9a9aa8;">#4338CA</div></div>
+          <div style="flex:none;width:150px;"><div style="height:64px;border-radius:12px;background:#1A1633;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">primary/ink</div><div style="font-size:11.5px;color:#9a9aa8;">#1A1633</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:#6a6a78;margin-bottom:10px;font-weight:600;">Neutrals</div>
+        <div style="display:flex;gap:14px;">
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#FFFFFF;border:1px solid #ECECF3;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">white</div><div style="font-size:11.5px;color:#9a9aa8;">#FFFFFF</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#FAFAFD;border:1px solid #ECECF3;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">canvas</div><div style="font-size:11.5px;color:#9a9aa8;">#FAFAFD</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#F4F4F9;border:1px solid #ECECF3;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">surface</div><div style="font-size:11.5px;color:#9a9aa8;">#F4F4F9</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#ECECF3;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">line</div><div style="font-size:11.5px;color:#9a9aa8;">#ECECF3</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#9A9AA8;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">muted</div><div style="font-size:11.5px;color:#9a9aa8;">#9A9AA8</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#6A6A78;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">body</div><div style="font-size:11.5px;color:#9a9aa8;">#6A6A78</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#1A1A22;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">ink</div><div style="font-size:11.5px;color:#9a9aa8;">#1A1A22</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:#6a6a78;margin-bottom:10px;font-weight:600;">Status — order &amp; stock</div>
+        <div style="display:flex;gap:14px;">
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#16A34A;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">success</div><div style="font-size:11.5px;color:#9a9aa8;">#16A34A · paid/ready</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#D97706;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">warning</div><div style="font-size:11.5px;color:#9a9aa8;">#D97706 · low stock</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#DC2626;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">danger</div><div style="font-size:11.5px;color:#9a9aa8;">#DC2626 · void/86</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#22A65A;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">veg</div><div style="font-size:11.5px;color:#9a9aa8;">#22A65A</div></div>
+          <div style="flex:none;width:150px;"><div style="height:56px;border-radius:12px;background:#C53A2B;"></div><div style="font-size:12px;margin-top:7px;font-weight:600;">non-veg</div><div style="font-size:11.5px;color:#9a9aa8;">#C53A2B</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE + SPACING/RADIUS/SHADOW in 2 cols -->
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:40px;">
+      <div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9aa8;margin-bottom:16px;">Type · Space Grotesk · tabular numerals</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F0F0F5;padding-bottom:14px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">Display 30/700</span><span style="font-size:30px;font-weight:700;letter-spacing:-0.01em;">₹861.00</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F0F0F5;padding-bottom:14px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">H1 22/700</span><span style="font-size:22px;font-weight:700;">Current Order</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F0F0F5;padding-bottom:14px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">H2 18/600</span><span style="font-size:18px;font-weight:600;">Cappuccino</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F0F0F5;padding-bottom:14px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">Body 14/500</span><span style="font-size:14px;font-weight:500;">Filter Coffee · ₹120 each</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F0F0F5;padding-bottom:14px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">Caption 12/500</span><span style="font-size:12px;font-weight:500;color:#6a6a78;">In stock · KOT #4821</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px;"><span style="width:108px;font-size:11.5px;color:#9a9aa8;flex:none;">Micro 11/600</span><span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#9a9aa8;">Table · Dine-in</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9aa8;margin-bottom:16px;">Spacing · 4px base</div>
+        <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:30px;">
+          <div style="text-align:center;"><div style="width:4px;height:4px;background:#4F46E5;border-radius:2px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">4</div></div>
+          <div style="text-align:center;"><div style="width:8px;height:8px;background:#4F46E5;border-radius:2px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">8</div></div>
+          <div style="text-align:center;"><div style="width:12px;height:12px;background:#4F46E5;border-radius:2px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">12</div></div>
+          <div style="text-align:center;"><div style="width:16px;height:16px;background:#4F46E5;border-radius:2px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">16</div></div>
+          <div style="text-align:center;"><div style="width:20px;height:20px;background:#4F46E5;border-radius:3px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">20</div></div>
+          <div style="text-align:center;"><div style="width:24px;height:24px;background:#4F46E5;border-radius:3px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">24</div></div>
+          <div style="text-align:center;"><div style="width:32px;height:32px;background:#4F46E5;border-radius:4px;margin:0 auto;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">32</div></div>
+        </div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9aa8;margin-bottom:16px;">Radius</div>
+        <div style="display:flex;gap:12px;margin-bottom:30px;">
+          <div style="text-align:center;"><div style="width:48px;height:48px;background:#EEF0FF;border:1.5px solid #4F46E5;border-radius:8px;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">sm 8</div></div>
+          <div style="text-align:center;"><div style="width:48px;height:48px;background:#EEF0FF;border:1.5px solid #4F46E5;border-radius:12px;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">md 12</div></div>
+          <div style="text-align:center;"><div style="width:48px;height:48px;background:#EEF0FF;border:1.5px solid #4F46E5;border-radius:14px;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">lg 14</div></div>
+          <div style="text-align:center;"><div style="width:48px;height:48px;background:#EEF0FF;border:1.5px solid #4F46E5;border-radius:16px;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">xl 16</div></div>
+          <div style="text-align:center;"><div style="width:48px;height:48px;background:#EEF0FF;border:1.5px solid #4F46E5;border-radius:20px;"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:6px;">2xl 20</div></div>
+        </div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9aa8;margin-bottom:16px;">Elevation</div>
+        <div style="display:flex;gap:18px;">
+          <div style="text-align:center;"><div style="width:64px;height:48px;background:#fff;border-radius:12px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:8px;">e1 card</div></div>
+          <div style="text-align:center;"><div style="width:64px;height:48px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(20,20,40,0.10);"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:8px;">e2 raised</div></div>
+          <div style="text-align:center;"><div style="width:64px;height:48px;background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(20,20,40,0.16);"></div><div style="font-size:10.5px;color:#9a9aa8;margin-top:8px;">e3 sheet</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 02: TABLET ============ -->
+  <div style="margin-bottom:6px;display:flex;align-items:center;gap:14px;">
+    <span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;color:#fff;background:#1A1A22;border-radius:8px;padding:5px 11px;">02</span>
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0;letter-spacing:-0.01em;">Tablet — counter, zero-scroll shell</h2>
+  </div>
+  <p style="margin:0 0 26px;font-size:14px;color:#6a6a78;max-width:820px;">Three columns of fixed chrome. <strong style="color:#4F46E5;">Pinned</strong>: icon rail, search + category pills, cart subtotal, PAY zone. <strong style="color:#4F46E5;">Scrolls internally</strong>: the product grid and the cart item list, each inside its own fixed container. The window never scrolls.</p>
+
+  <div style="display:flex;gap:48px;align-items:flex-start;margin-bottom:60px;">
+
+    <!-- TABLET — EMPTY CART -->
+    <div style="flex:none;width:1194px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><span style="width:9px;height:9px;border-radius:999px;background:#9A9AA8;"></span><span style="font-weight:600;font-size:15px;">2.1 — Empty cart</span><span style="font-size:13px;color:#9a9aa8;">first state of every new order</span></div>
+      <div style="width:1194px;height:790px;background:#FFFFFF;border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(20,20,20,0.12);display:flex;border:1px solid #E8E8EE;">
+        <!-- rail -->
+        <div style="flex:none;width:72px;background:#F7F7FB;border-right:1px solid #ECECF3;display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:#4F46E5;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px;margin-bottom:14px;">k</div>
+          <div style="width:48px;height:48px;border-radius:12px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></div>
+          <div style="margin-top:auto;width:36px;height:36px;border-radius:10px;background:#E7E6FB;color:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">RA</div>
+        </div>
+        <!-- center -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+          <div style="flex:none;padding:16px 22px 12px;border-bottom:1px solid #F0F0F5;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+              <div style="flex:1;display:flex;align-items:center;gap:10px;background:#F4F4F9;border:1px solid #ECECF3;border-radius:12px;padding:11px 14px;color:#9a9aa8;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span style="font-size:13.5px;">Search item or scan barcode…</span></div>
+              <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E8E8EE;border-radius:12px;padding:9px 14px;"><span style="font-size:11px;color:#9a9aa8;text-transform:uppercase;letter-spacing:0.08em;">Table</span><span style="font-size:15px;font-weight:700;">12</span></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="padding:8px 15px;border-radius:10px;background:#4F46E5;color:#fff;font-weight:600;font-size:13.5px;">Coffee</div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Pastries</div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Main Course</div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Cold Drinks</div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Snacks</div>
+            </div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:14px 22px;position:relative;">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Filter Coffee</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹120</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Cappuccino</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹180</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Cold Brew</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹220</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 9-5 16-9 16Z"/><path d="M11 13c2-3 5-4 8-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Masala Chai</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹90</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#FBEFE9;display:flex;align-items:center;justify-content:center;color:#d09a7c;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Iced Latte</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹200</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Flat White</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹190</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Mocha</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹210</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Espresso</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹110</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;height:32px;background:linear-gradient(to top,#fff,rgba(255,255,255,0));"></div>
+          </div>
+        </div>
+        <!-- empty cart -->
+        <div style="flex:none;width:340px;background:#FAFAFD;border-left:1px solid #ECECF3;display:flex;flex-direction:column;">
+          <div style="flex:none;padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F0F0F5;"><span style="font-weight:700;font-size:16px;">Order</span><span style="font-size:12px;color:#9a9aa8;background:#F4F4F9;border-radius:7px;padding:2px 8px;">0 items</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;">
+            <div style="width:66px;height:66px;border-radius:18px;background:#EEF0FF;color:#A7A2F0;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
+            <div><div style="font-weight:600;font-size:15px;color:#3a3a44;margin-bottom:4px;">No items yet</div><div style="font-size:13px;color:#9a9aa8;line-height:1.5;max-width:200px;">Tap a product to start this order. Items appear here with quantity steppers.</div></div>
+          </div>
+          <div style="flex:none;padding:12px 18px;background:#fff;border-top:1px solid #ECECF3;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#c2c2cc;"><span>Subtotal</span><span>₹0.00</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#c2c2cc;"><span>CGST 2.5%</span><span>₹0.00</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#c2c2cc;"><span>SGST 2.5%</span><span>₹0.00</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;margin-top:3px;border-top:1px solid #EFEFF5;"><span style="font-weight:700;font-size:15px;color:#9a9aa8;">Total payable</span><span style="font-weight:700;font-size:20px;color:#9a9aa8;">₹0.00</span></div>
+          </div>
+          <div style="flex:none;padding:12px 18px 16px;background:#fff;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;opacity:0.45;">
+              <div style="border:1px solid #E4E4ED;color:#9a9aa8;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span style="font-size:11px;font-weight:600;">Cash</span></div>
+              <div style="border:1px solid #E4E4ED;color:#9a9aa8;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span style="font-size:11px;font-weight:600;">Static UPI</span></div>
+              <div style="border:1px solid #E4E4ED;color:#9a9aa8;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3"/></svg><span style="font-size:11px;font-weight:600;">Dynamic QR</span></div>
+            </div>
+            <div style="background:#ECECF3;color:#9a9aa8;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:center;"><span style="font-weight:700;font-size:16px;">PAY — add items</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:24px;flex-wrap:wrap;font-size:12.5px;color:#6a6a78;">
+        <span><strong style="color:#4F46E5;">Pinned ·</strong> rail / search+pills / totals / PAY</span>
+        <span><strong style="color:#4F46E5;">Scrolls ·</strong> product grid only</span>
+        <span><strong style="color:#4F46E5;">Instant ·</strong> pill switch, card tap</span>
+        <span><strong style="color:#4F46E5;">Disabled ·</strong> PAY + methods until 1st item</span>
+      </div>
+    </div>
+
+    <!-- TABLET — ACTIVE CART -->
+    <div style="flex:none;width:1194px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><span style="width:9px;height:9px;border-radius:999px;background:#4F46E5;"></span><span style="font-weight:600;font-size:15px;">2.2 — Active cart · 3 items</span><span style="font-size:13px;color:#9a9aa8;">steppers, tax breakdown, live total</span></div>
+      <div style="width:1194px;height:790px;background:#FFFFFF;border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(20,20,20,0.12);display:flex;border:1px solid #E8E8EE;">
+        <!-- rail -->
+        <div style="flex:none;width:72px;background:#F7F7FB;border-right:1px solid #ECECF3;display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:#4F46E5;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px;margin-bottom:14px;">k</div>
+          <div style="width:48px;height:48px;border-radius:12px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;position:relative;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg><span style="position:absolute;top:8px;right:10px;width:8px;height:8px;border-radius:999px;background:#DC2626;border:1.5px solid #F7F7FB;"></span></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div>
+          <div style="width:48px;height:48px;border-radius:12px;color:#9a9aa8;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></div>
+          <div style="margin-top:auto;width:36px;height:36px;border-radius:10px;background:#E7E6FB;color:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">RA</div>
+        </div>
+        <!-- center -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+          <div style="flex:none;padding:16px 22px 12px;border-bottom:1px solid #F0F0F5;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+              <div style="flex:1;display:flex;align-items:center;gap:10px;background:#F4F4F9;border:1px solid #ECECF3;border-radius:12px;padding:11px 14px;color:#9a9aa8;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span style="font-size:13.5px;">Search item or scan barcode…</span></div>
+              <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E8E8EE;border-radius:12px;padding:9px 14px;"><span style="font-size:11px;color:#9a9aa8;text-transform:uppercase;letter-spacing:0.08em;">Table</span><span style="font-size:15px;font-weight:700;">12</span></div>
+              <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E8E8EE;border-radius:12px;padding:9px 14px;"><span style="font-size:11px;color:#9a9aa8;text-transform:uppercase;letter-spacing:0.08em;">KOT</span><span style="font-size:15px;font-weight:700;">#4821</span></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="padding:8px 15px;border-radius:10px;background:#4F46E5;color:#fff;font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:7px;">Coffee <span style="background:rgba(255,255,255,0.25);border-radius:6px;padding:1px 7px;font-size:11.5px;">12</span></div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;display:flex;align-items:center;gap:7px;">Pastries <span style="background:#E4E4ED;border-radius:6px;padding:1px 7px;font-size:11.5px;">8</span></div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;display:flex;align-items:center;gap:7px;">Main Course <span style="background:#E4E4ED;border-radius:6px;padding:1px 7px;font-size:11.5px;">16</span></div>
+              <div style="padding:8px 15px;border-radius:10px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Cold Drinks</div>
+            </div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:14px 22px;position:relative;">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Filter Coffee</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹120</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1.5px solid #4F46E5;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 12px rgba(79,70,229,0.12);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span><span style="position:absolute;right:6px;top:6px;min-width:20px;height:20px;border-radius:999px;background:#4F46E5;color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;">2</span></div><div><span style="font-size:13px;font-weight:600;">Cappuccino</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹180</span><span style="width:26px;height:26px;border-radius:8px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Cold Brew</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹220</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 9-5 16-9 16Z"/><path d="M11 13c2-3 5-4 8-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Masala Chai</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹90</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#FBEFE9;display:flex;align-items:center;justify-content:center;color:#d09a7c;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Iced Latte</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹200</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Flat White</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹190</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Mocha</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹210</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+              <div style="background:#fff;border:1px solid #EAEAF1;border-radius:14px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.5;border-radius:9px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:2px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div><span style="font-size:13px;font-weight:600;">Espresso</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:700;">₹110</span><span style="width:26px;height:26px;border-radius:8px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;height:32px;background:linear-gradient(to top,#fff,rgba(255,255,255,0));"></div>
+          </div>
+        </div>
+        <!-- active cart -->
+        <div style="flex:none;width:340px;background:#FAFAFD;border-left:1px solid #ECECF3;display:flex;flex-direction:column;">
+          <div style="flex:none;padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F0F0F5;"><div style="display:flex;align-items:center;gap:9px;"><span style="font-weight:700;font-size:16px;">Order</span><span style="font-size:12px;color:#4F46E5;background:#EEF0FF;border-radius:7px;padding:2px 8px;font-weight:600;">3 items · 5 qty</span></div><span style="font-size:12.5px;color:#9a9aa8;text-decoration:underline;">Clear</span></div>
+          <div style="flex:1;overflow:hidden;padding:8px 18px;display:flex;flex-direction:column;">
+            <div style="display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:600;">Cappuccino</div><div style="font-size:11.5px;color:#9a9aa8;">₹180 × 2</div></div><div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E4E4ED;border-radius:9px;padding:3px;"><span style="width:24px;height:24px;border-radius:7px;background:#F4F4F9;color:#555;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:13.5px;font-weight:700;min-width:14px;text-align:center;">2</span><span style="width:24px;height:24px;border-radius:7px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div><span style="font-size:13.5px;font-weight:700;min-width:54px;text-align:right;">₹360</span></div>
+            <div style="display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:600;">Masala Dosa</div><div style="font-size:11.5px;color:#9a9aa8;">₹160 × 1</div></div><div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E4E4ED;border-radius:9px;padding:3px;"><span style="width:24px;height:24px;border-radius:7px;background:#F4F4F9;color:#555;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:13.5px;font-weight:700;min-width:14px;text-align:center;">1</span><span style="width:24px;height:24px;border-radius:7px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div><span style="font-size:13.5px;font-weight:700;min-width:54px;text-align:right;">₹160</span></div>
+            <div style="display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:600;">Butter Croissant</div><div style="font-size:11.5px;color:#9a9aa8;">₹150 × 2</div></div><div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E4E4ED;border-radius:9px;padding:3px;"><span style="width:24px;height:24px;border-radius:7px;background:#F4F4F9;color:#555;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:13.5px;font-weight:700;min-width:14px;text-align:center;">2</span><span style="width:24px;height:24px;border-radius:7px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div><span style="font-size:13.5px;font-weight:700;min-width:54px;text-align:right;">₹300</span></div>
+          </div>
+          <div style="flex:none;padding:12px 18px;background:#fff;border-top:1px solid #ECECF3;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>Subtotal</span><span style="font-weight:600;">₹820.00</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>CGST 2.5%</span><span>₹20.50</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>SGST 2.5%</span><span>₹20.50</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;margin-top:3px;border-top:1px solid #EFEFF5;"><span style="font-weight:700;font-size:15px;">Total payable</span><span style="font-weight:700;font-size:20px;">₹861.00</span></div>
+          </div>
+          <div style="flex:none;padding:12px 18px 16px;background:#fff;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;">
+              <div style="border:1.5px solid #4F46E5;background:#EEF0FF;color:#4338CA;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span style="font-size:11px;font-weight:600;">Cash</span></div>
+              <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span style="font-size:11px;font-weight:600;">Static UPI</span></div>
+              <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:11px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3"/></svg><span style="font-size:11px;font-weight:600;">Dynamic QR</span></div>
+            </div>
+            <div style="background:#4F46E5;color:#fff;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 18px rgba(79,70,229,0.32);"><span style="font-weight:700;font-size:16px;">PAY ₹861.00</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:24px;flex-wrap:wrap;font-size:12.5px;color:#6a6a78;">
+        <span><strong style="color:#4F46E5;">Animated ·</strong> cart row slide-in (160ms), badge tick</span>
+        <span><strong style="color:#4F46E5;">Instant ·</strong> +/- steppers recalc total</span>
+        <span><strong style="color:#4F46E5;">Selected ·</strong> Cash method pre-highlighted</span>
+        <span><strong style="color:#4F46E5;">In-cart ·</strong> card gets indigo ring + qty badge</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ SECTION 03: PHONE ============ -->
+  <div style="margin-bottom:6px;display:flex;align-items:center;gap:14px;">
+    <span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;color:#fff;background:#1A1A22;border-radius:8px;padding:5px 11px;">03</span>
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0;letter-spacing:-0.01em;">Phone — handheld, collapsible cart</h2>
+  </div>
+  <p style="margin:0 0 26px;font-size:14px;color:#6a6a78;max-width:820px;">Same language, re-laid-out for one thumb. Rail becomes a <strong style="color:#4F46E5;">bottom tab bar</strong> (same 4 destinations). Search + pills stay pinned; grid drops to <strong style="color:#4F46E5;">2 columns</strong>. The cart is a <strong style="color:#4F46E5;">floating pill</strong> that expands into a full-height bottom sheet — collapsed by default, never both visible at once.</p>
+
+  <div style="display:flex;gap:48px;align-items:flex-start;margin-bottom:60px;">
+
+    <!-- PHONE EMPTY -->
+    <div style="flex:none;width:390px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;"><span style="width:9px;height:9px;border-radius:999px;background:#9A9AA8;"></span><span style="font-weight:600;font-size:15px;">3.1 — Empty cart</span></div>
+      <div style="width:390px;height:844px;background:#FFFFFF;border-radius:38px;overflow:hidden;box-shadow:0 18px 50px rgba(20,20,20,0.18);border:1px solid #E8E8EE;display:flex;flex-direction:column;position:relative;">
+        <!-- status bar -->
+        <div style="flex:none;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;"><span style="font-size:13px;font-weight:600;">9:41</span><div style="display:flex;align-items:center;gap:6px;"><svg width="17" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="1" fill="#1A1A22"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1" fill="#1A1A22"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1A1A22"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#C2C2CC"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1A1A22" stroke-width="1.4"><path d="M8 3C5.5 3 3.4 4 2 5.5"/><path d="M8 6.5c-1.2 0-2.3.4-3 1.2"/><circle cx="8" cy="10" r="1" fill="#1A1A22" stroke="none"/></svg><div style="width:24px;height:12px;border:1px solid #1A1A22;border-radius:3px;padding:1.5px;display:flex;"><div style="width:70%;background:#1A1A22;border-radius:1px;"></div></div></div></div>
+        <!-- header -->
+        <div style="flex:none;padding:6px 18px 12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div><div style="font-size:10.5px;color:#9a9aa8;text-transform:uppercase;letter-spacing:0.1em;">Table 12 · Dine-in</div><div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:21px;">Menu</div></div><div style="width:40px;height:40px;border-radius:12px;background:#E7E6FB;color:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">RA</div></div>
+          <div style="display:flex;align-items:center;gap:9px;background:#F4F4F9;border:1px solid #ECECF3;border-radius:13px;padding:12px 14px;color:#9a9aa8;margin-bottom:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span style="font-size:14px;">Search dishes…</span></div>
+          <div style="display:flex;gap:8px;overflow:hidden;">
+            <div style="flex:none;padding:9px 16px;border-radius:11px;background:#4F46E5;color:#fff;font-weight:600;font-size:13.5px;">Coffee</div>
+            <div style="flex:none;padding:9px 16px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Pastries</div>
+            <div style="flex:none;padding:9px 16px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Main</div>
+          </div>
+        </div>
+        <!-- grid 2col scroll -->
+        <div style="flex:1;overflow:hidden;padding:4px 18px;position:relative;">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:13px;">
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Filter Coffee</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹120</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Cappuccino</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹180</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Cold Brew</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹220</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 9-5 16-9 16Z"/><path d="M11 13c2-3 5-4 8-5"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Masala Chai</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹90</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#FBEFE9;display:flex;align-items:center;justify-content:center;color:#d09a7c;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 11a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1L6 8Z"/><path d="M9 8 8 3M15 8l1-5"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Iced Latte</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹200</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Flat White</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹190</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(to top,#fff,rgba(255,255,255,0));"></div>
+        </div>
+        <!-- bottom tab bar -->
+        <div style="flex:none;height:78px;border-top:1px solid #ECECF3;background:#fff;display:flex;align-items:flex-start;justify-content:space-around;padding:11px 8px 0;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#4F46E5;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span style="font-size:10.5px;font-weight:600;">POS</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;font-weight:500;">Orders</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span style="font-size:10.5px;font-weight:500;">Inventory</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg><span style="font-size:10.5px;font-weight:500;">Admin</span></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12.5px;color:#6a6a78;line-height:1.6;"><strong style="color:#4F46E5;">Pinned ·</strong> status, header, search, pills, tab bar. <strong style="color:#4F46E5;">Scrolls ·</strong> 2-col grid. No cart pill until 1st item.</div>
+    </div>
+
+    <!-- PHONE ACTIVE + FLOATING PILL -->
+    <div style="flex:none;width:390px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;"><span style="width:9px;height:9px;border-radius:999px;background:#4F46E5;"></span><span style="font-weight:600;font-size:15px;">3.2 — Active · cart collapsed</span></div>
+      <div style="width:390px;height:844px;background:#FFFFFF;border-radius:38px;overflow:hidden;box-shadow:0 18px 50px rgba(20,20,20,0.18);border:1px solid #E8E8EE;display:flex;flex-direction:column;position:relative;">
+        <div style="flex:none;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;"><span style="font-size:13px;font-weight:600;">9:41</span><div style="display:flex;align-items:center;gap:6px;"><svg width="17" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="1" fill="#1A1A22"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1" fill="#1A1A22"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1A1A22"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#C2C2CC"/></svg><div style="width:24px;height:12px;border:1px solid #1A1A22;border-radius:3px;padding:1.5px;display:flex;"><div style="width:70%;background:#1A1A22;border-radius:1px;"></div></div></div></div>
+        <div style="flex:none;padding:6px 18px 12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div><div style="font-size:10.5px;color:#9a9aa8;text-transform:uppercase;letter-spacing:0.1em;">Table 12 · Dine-in</div><div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:21px;">Menu</div></div><div style="width:40px;height:40px;border-radius:12px;background:#E7E6FB;color:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">RA</div></div>
+          <div style="display:flex;align-items:center;gap:9px;background:#F4F4F9;border:1px solid #ECECF3;border-radius:13px;padding:12px 14px;color:#9a9aa8;margin-bottom:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span style="font-size:14px;">Search dishes…</span></div>
+          <div style="display:flex;gap:8px;overflow:hidden;"><div style="flex:none;padding:9px 16px;border-radius:11px;background:#4F46E5;color:#fff;font-weight:600;font-size:13.5px;">Coffee</div><div style="flex:none;padding:9px 16px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Pastries</div><div style="flex:none;padding:9px 16px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:13.5px;">Main</div></div>
+        </div>
+        <div style="flex:1;overflow:hidden;padding:4px 18px;position:relative;">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:13px;">
+            <div style="background:#fff;border:1.5px solid #4F46E5;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 4px 12px rgba(79,70,229,0.12);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span><span style="position:absolute;right:8px;top:8px;min-width:22px;height:22px;border-radius:999px;background:#4F46E5;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;">2</span></div><div style="font-size:14px;font-weight:600;">Cappuccino</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹180</span><span style="width:34px;height:34px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Filter Coffee</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹120</span><span style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EAF3EC;display:flex;align-items:center;justify-content:center;color:#74b08a;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M7 11a5 5 0 0 1 10 0"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span></div><div style="font-size:14px;font-weight:600;">Masala Dosa</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹160</span><span style="width:34px;height:34px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 2px rgba(20,20,40,0.04);"><div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#FBEFE9;display:flex;align-items:center;justify-content:center;color:#d09a7c;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M5 20l3-12 8 3-2 9"/></svg><span style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:5px;height:5px;border-radius:999px;background:#22A65A;"></span></span><span style="position:absolute;right:8px;top:8px;min-width:22px;height:22px;border-radius:999px;background:#4F46E5;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;">2</span></div><div style="font-size:14px;font-weight:600;">Butter Croissant</div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹150</span><span style="width:34px;height:34px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(to top,#fff 30%,rgba(255,255,255,0));"></div>
+        </div>
+        <!-- floating cart pill -->
+        <div style="position:absolute;left:16px;right:16px;bottom:90px;background:#1A1633;color:#fff;border-radius:18px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 12px 28px rgba(26,22,51,0.34);">
+          <div style="display:flex;align-items:center;gap:11px;"><div style="position:relative;width:34px;height:34px;border-radius:11px;background:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div><div style="line-height:1.2;"><div style="font-size:14.5px;font-weight:600;">3 items · 5 qty</div><div style="font-size:12px;color:#9b97c9;">Tap to review &amp; pay</div></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;font-weight:700;">₹861</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A7A2F0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></div>
+        </div>
+        <div style="flex:none;height:78px;border-top:1px solid #ECECF3;background:#fff;display:flex;align-items:flex-start;justify-content:space-around;padding:11px 8px 0;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#4F46E5;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span style="font-size:10.5px;font-weight:600;">POS</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;font-weight:500;">Orders</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span style="font-size:10.5px;font-weight:500;">Inventory</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9a9aa8;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg><span style="font-size:10.5px;font-weight:500;">Admin</span></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12.5px;color:#6a6a78;line-height:1.6;"><strong style="color:#4F46E5;">Floating pill</strong> sits above tab bar, summarises count + total. Chevron ▲ hints it expands. <strong style="color:#4F46E5;">Animated ·</strong> pill scales in + count ticks on add.</div>
+    </div>
+
+    <!-- PHONE BOTTOM SHEET EXPANDED -->
+    <div style="flex:none;width:390px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;"><span style="width:9px;height:9px;border-radius:999px;background:#4F46E5;"></span><span style="font-weight:600;font-size:15px;">3.3 — Cart expanded · bottom sheet</span></div>
+      <div style="width:390px;height:844px;background:#FFFFFF;border-radius:38px;overflow:hidden;box-shadow:0 18px 50px rgba(20,20,20,0.18);border:1px solid #E8E8EE;position:relative;">
+        <!-- dimmed menu behind -->
+        <div style="position:absolute;inset:0;background:#1A1633;opacity:0.5;"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,22,51,0.35),rgba(26,22,51,0.55));"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;"><span style="font-size:13px;font-weight:600;color:#fff;">9:41</span><div style="width:24px;height:12px;border:1px solid #fff;border-radius:3px;padding:1.5px;display:flex;"><div style="width:70%;background:#fff;border-radius:1px;"></div></div></div>
+        <!-- sheet -->
+        <div style="position:absolute;left:0;right:0;bottom:0;height:760px;background:#fff;border-radius:26px 26px 38px 38px;display:flex;flex-direction:column;box-shadow:0 -12px 40px rgba(20,20,20,0.2);">
+          <div style="flex:none;padding:12px 0 4px;display:flex;justify-content:center;"><div style="width:42px;height:5px;border-radius:999px;background:#E0E0EA;"></div></div>
+          <div style="flex:none;padding:8px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F0F0F5;"><div style="display:flex;align-items:center;gap:9px;"><span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:19px;">Your Order</span><span style="font-size:12px;color:#4F46E5;background:#EEF0FF;border-radius:7px;padding:2px 8px;font-weight:600;">Table 12</span></div><span style="width:30px;height:30px;border-radius:999px;background:#F4F4F9;color:#6a6a78;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 15 6-6 6 6"/></svg></span></div>
+          <!-- items scroll -->
+          <div style="flex:1;overflow:hidden;padding:6px 20px;display:flex;flex-direction:column;">
+            <div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:none;width:46px;height:46px;border-radius:12px;background:#EEF0FF;color:#8b8fe0;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg></div><div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Cappuccino</div><div style="font-size:12.5px;color:#9a9aa8;">₹180 each</div></div><div style="display:flex;align-items:center;gap:8px;background:#F4F4F9;border-radius:11px;padding:4px;"><span style="width:30px;height:30px;border-radius:8px;background:#fff;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,0.06);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:15px;font-weight:700;min-width:16px;text-align:center;">2</span><span style="width:30px;height:30px;border-radius:8px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:none;width:46px;height:46px;border-radius:12px;background:#EAF3EC;color:#74b08a;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M7 11a5 5 0 0 1 10 0"/></svg></div><div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Masala Dosa</div><div style="font-size:12.5px;color:#9a9aa8;">₹160 each</div></div><div style="display:flex;align-items:center;gap:8px;background:#F4F4F9;border-radius:11px;padding:4px;"><span style="width:30px;height:30px;border-radius:8px;background:#fff;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,0.06);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:15px;font-weight:700;min-width:16px;text-align:center;">1</span><span style="width:30px;height:30px;border-radius:8px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+            <div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #F0F0F5;"><div style="flex:none;width:46px;height:46px;border-radius:12px;background:#FBEFE9;color:#d09a7c;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M5 20l3-12 8 3-2 9"/></svg></div><div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Butter Croissant</div><div style="font-size:12.5px;color:#9a9aa8;">₹150 each</div></div><div style="display:flex;align-items:center;gap:8px;background:#F4F4F9;border-radius:11px;padding:4px;"><span style="width:30px;height:30px;border-radius:8px;background:#fff;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,0.06);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></span><span style="font-size:15px;font-weight:700;min-width:16px;text-align:center;">2</span><span style="width:30px;height:30px;border-radius:8px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div></div>
+          </div>
+          <!-- totals -->
+          <div style="flex:none;padding:13px 20px;background:#FAFAFD;border-top:1px solid #ECECF3;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>Subtotal</span><span style="font-weight:600;">₹820.00</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>CGST 2.5%</span><span>₹20.50</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6a6a78;"><span>SGST 2.5%</span><span>₹20.50</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;margin-top:2px;border-top:1px solid #ECECF3;"><span style="font-weight:700;font-size:15px;">Total payable</span><span style="font-weight:700;font-size:21px;">₹861.00</span></div>
+          </div>
+          <!-- pay -->
+          <div style="flex:none;padding:12px 20px 26px;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px;">
+              <div style="border:1.5px solid #4F46E5;background:#EEF0FF;color:#4338CA;border-radius:13px;padding:11px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span style="font-size:11.5px;font-weight:600;">Cash</span></div>
+              <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:11px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span style="font-size:11.5px;font-weight:600;">Static UPI</span></div>
+              <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:11px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3"/></svg><span style="font-size:11.5px;font-weight:600;">Dynamic QR</span></div>
+            </div>
+            <div style="background:#4F46E5;color:#fff;border-radius:15px;padding:17px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 22px rgba(79,70,229,0.34);"><span style="font-weight:700;font-size:17px;">PAY ₹861.00</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12.5px;color:#6a6a78;line-height:1.6;"><strong style="color:#4F46E5;">Animated ·</strong> sheet slides up 280ms ease-out, scrim fades in. <strong style="color:#4F46E5;">Scrolls ·</strong> item list. <strong style="color:#4F46E5;">Pinned ·</strong> totals + PAY. Drag handle or chevron collapses it.</div>
+    </div>
+
+  </div>
+
+  <!-- ============ SECTION 04: STORYBOARD ============ -->
+  <div style="margin-bottom:6px;display:flex;align-items:center;gap:14px;">
+    <span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;color:#fff;background:#1A1A22;border-radius:8px;padding:5px 11px;">04</span>
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0;letter-spacing:-0.01em;">Add-to-cart micro-interaction</h2>
+  </div>
+  <p style="margin:0 0 26px;font-size:14px;color:#6a6a78;max-width:820px;">Tap → card depresses → springs back with an indigo ring &amp; qty badge while a <strong style="color:#4F46E5;">+1</strong> chip flies to the cart, which ticks up. Total elapsed ≈ 360ms. Haptic tap on commit.</p>
+
+  <div style="background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(20,20,40,0.06);padding:34px;margin-bottom:56px;width:1180px;">
+    <div style="display:flex;align-items:center;gap:20px;">
+
+      <!-- FRAME 1 -->
+      <div style="flex:1;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#9a9aa8;margin-bottom:10px;">Frame 1 · 0ms — tap (pressed)</div>
+        <div style="background:#FAFAFD;border:1px solid #ECECF3;border-radius:18px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:22px;">
+          <div style="width:170px;background:#F4F4F9;border:1px solid #DEDEEA;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;transform:scale(0.95);box-shadow:inset 0 2px 8px rgba(40,40,70,0.10);">
+            <div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#E5E7F7;display:flex;align-items:center;justify-content:center;color:#9095d8;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg></div>
+            <div style="font-size:14px;font-weight:600;">Filter Coffee</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹120</span><span style="width:34px;height:34px;border-radius:10px;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+          <div style="width:230px;background:#1A1633;color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 10px 22px rgba(26,22,51,0.28);"><span style="font-size:13.5px;font-weight:600;">2 items · 4 qty</span><span style="font-size:16px;font-weight:700;">₹390</span></div>
+        </div>
+      </div>
+
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C2C2CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+
+      <!-- FRAME 2 -->
+      <div style="flex:1;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#9a9aa8;margin-bottom:10px;">Frame 2 · 160ms — pulse + fly</div>
+        <div style="background:#FAFAFD;border:1px solid #ECECF3;border-radius:18px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:22px;position:relative;">
+          <div style="width:170px;background:#fff;border:1.5px solid #4F46E5;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;transform:scale(1.04);box-shadow:0 10px 24px rgba(79,70,229,0.22);position:relative;">
+            <div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;right:8px;top:8px;min-width:22px;height:22px;border-radius:999px;background:#4F46E5;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;">1</span></div>
+            <div style="font-size:14px;font-weight:600;">Filter Coffee</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹120</span><span style="width:34px;height:34px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+          <!-- +1 flyer -->
+          <div style="position:absolute;left:50%;top:120px;transform:translateX(10px);background:#4F46E5;color:#fff;font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;box-shadow:0 6px 14px rgba(79,70,229,0.4);">+1</div>
+          <div style="width:230px;background:#1A1633;color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 10px 22px rgba(26,22,51,0.28);"><span style="font-size:13.5px;font-weight:600;">2 items · 4 qty</span><span style="font-size:16px;font-weight:700;">₹390</span></div>
+        </div>
+      </div>
+
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C2C2CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+
+      <!-- FRAME 3 -->
+      <div style="flex:1;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#9a9aa8;margin-bottom:10px;">Frame 3 · 360ms — settled</div>
+        <div style="background:#FAFAFD;border:1px solid #ECECF3;border-radius:18px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:22px;">
+          <div style="width:170px;background:#fff;border:1.5px solid #4F46E5;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:9px;box-shadow:0 4px 12px rgba(79,70,229,0.12);">
+            <div style="position:relative;aspect-ratio:1.3;border-radius:11px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;right:8px;top:8px;min-width:22px;height:22px;border-radius:999px;background:#4F46E5;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;">1</span></div>
+            <div style="font-size:14px;font-weight:600;">Filter Coffee</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹120</span><span style="width:34px;height:34px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+          <div style="width:230px;background:#1A1633;color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 12px 26px rgba(26,22,51,0.34);transform:scale(1.03);"><span style="font-size:13.5px;font-weight:600;">3 items · 5 qty</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:16px;font-weight:700;">₹450</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A7A2F0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ SECTION 05: COMPONENT STATES ============ -->
+  <div style="margin-bottom:6px;display:flex;align-items:center;gap:14px;">
+    <span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;color:#fff;background:#1A1A22;border-radius:8px;padding:5px 11px;">05</span>
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0;letter-spacing:-0.01em;">Component states</h2>
+  </div>
+  <p style="margin:0 0 26px;font-size:14px;color:#6a6a78;max-width:820px;">The reusable pieces engineering builds once and themes everywhere.</p>
+
+  <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;width:1180px;">
+
+    <!-- PAYMENT GRID -->
+    <div style="background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(20,20,40,0.06);padding:28px;width:560px;">
+      <div style="font-weight:700;font-size:16px;margin-bottom:18px;">Payment method grid</div>
+      <div style="display:flex;gap:28px;">
+        <div style="flex:1;">
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:10px;">Default — none selected</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;">
+            <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span style="font-size:11.5px;font-weight:600;">Cash</span></div>
+            <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span style="font-size:11.5px;font-weight:600;">Static UPI</span></div>
+            <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3"/></svg><span style="font-size:11.5px;font-weight:600;">Dynamic QR</span></div>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:10px;">Selected — Dynamic QR</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;">
+            <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span style="font-size:11.5px;font-weight:600;">Cash</span></div>
+            <div style="border:1px solid #E4E4ED;color:#6a6a78;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span style="font-size:11.5px;font-weight:600;">Static UPI</span></div>
+            <div style="position:relative;border:1.5px solid #4F46E5;background:#EEF0FF;color:#4338CA;border-radius:13px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(79,70,229,0.16);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3"/></svg><span style="font-size:11.5px;font-weight:700;">Dynamic QR</span><span style="position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:999px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILL BAR -->
+    <div style="background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(20,20,40,0.06);padding:28px;width:560px;">
+      <div style="font-weight:700;font-size:16px;margin-bottom:18px;">Category pill</div>
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div>
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:10px;">Active vs inactive</div>
+          <div style="display:flex;gap:9px;align-items:center;">
+            <div style="padding:9px 18px;border-radius:11px;background:#4F46E5;color:#fff;font-weight:600;font-size:14px;display:flex;align-items:center;gap:7px;">Coffee <span style="background:rgba(255,255,255,0.25);border-radius:6px;padding:1px 7px;font-size:11.5px;">12</span></div>
+            <div style="padding:9px 18px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:14px;display:flex;align-items:center;gap:7px;">Pastries <span style="background:#E4E4ED;border-radius:6px;padding:1px 7px;font-size:11.5px;">8</span></div>
+            <div style="padding:9px 18px;border-radius:11px;background:#F4F4F9;color:#5a5a68;font-weight:500;font-size:14px;">Main Course</div>
+          </div>
+        </div>
+        <div style="font-size:12.5px;color:#6a6a78;line-height:1.6;border-top:1px solid #F0F0F5;padding-top:14px;"><strong style="color:#4F46E5;">Active ·</strong> indigo fill, white text, count chip in 25% white. <strong style="color:#4F46E5;">Inactive ·</strong> surface fill, body text, neutral count chip. Switch is instant (no transition); grid re-filters underneath.</div>
+      </div>
+    </div>
+
+    <!-- PRODUCT CARD STATES -->
+    <div style="background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(20,20,40,0.06);padding:28px;width:1180px;">
+      <div style="font-weight:700;font-size:16px;margin-bottom:18px;">Product card</div>
+      <div style="display:flex;gap:40px;align-items:flex-start;">
+        <div style="text-align:center;">
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:12px;">Default</div>
+          <div style="width:200px;background:#fff;border:1px solid #EAEAF1;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(20,20,40,0.04);">
+            <div style="position:relative;aspect-ratio:1.4;border-radius:12px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:9px;top:9px;width:13px;height:13px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:6px;height:6px;border-radius:999px;background:#22A65A;"></span></span></div>
+            <div style="text-align:left;font-size:14px;font-weight:600;">Cappuccino</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹180</span><span style="width:32px;height:32px;border-radius:10px;background:#EEF0FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:12px;">Pressed — pushed in</div>
+          <div style="width:200px;background:#F4F4F9;border:1px solid #DEDEEA;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;transform:scale(0.96);box-shadow:inset 0 2px 8px rgba(40,40,70,0.10);">
+            <div style="position:relative;aspect-ratio:1.4;border-radius:12px;background:#E5E7F7;display:flex;align-items:center;justify-content:center;color:#9095d8;"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:9px;top:9px;width:13px;height:13px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:6px;height:6px;border-radius:999px;background:#22A65A;"></span></span></div>
+            <div style="text-align:left;font-size:14px;font-weight:600;">Cappuccino</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹180</span><span style="width:32px;height:32px;border-radius:10px;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11.5px;color:#9a9aa8;margin-bottom:12px;">In cart — qty badge + ring</div>
+          <div style="width:200px;background:#fff;border:1.5px solid #4F46E5;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 12px rgba(79,70,229,0.14);">
+            <div style="position:relative;aspect-ratio:1.4;border-radius:12px;background:#EEF0FF;display:flex;align-items:center;justify-content:center;color:#8b8fe0;"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M17 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg><span style="position:absolute;left:9px;top:9px;width:13px;height:13px;border-radius:3px;border:1.5px solid #22A65A;display:flex;align-items:center;justify-content:center;"><span style="width:6px;height:6px;border-radius:999px;background:#22A65A;"></span></span><span style="position:absolute;right:9px;top:9px;min-width:24px;height:24px;border-radius:999px;background:#4F46E5;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 7px;">2</span></div>
+            <div style="text-align:left;font-size:14px;font-weight:600;">Cappuccino</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:15px;font-weight:700;">₹180</span><span style="width:32px;height:32px;border-radius:10px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:200px;font-size:13px;color:#6a6a78;line-height:1.65;padding-top:30px;">
+          <div style="margin-bottom:10px;"><strong style="color:#4F46E5;">Veg / non-veg dot</strong> always top-left (FSSAI norm).</div>
+          <div style="margin-bottom:10px;"><strong style="color:#4F46E5;">Pressed</strong> scales to 0.96 with inset shadow — 90ms, on touchstart.</div>
+          <div><strong style="color:#4F46E5;">In-cart</strong> adds a 1.5px indigo ring, fills the + button, and shows a live qty badge that updates with every tap.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:48px;font-size:12.5px;color:#9a9aa8;">End of spec · Direction B committed · Restaurant OS Phase 1 MVP</div>
+  <div id="spec-end"></div>
+</div>
+</x-dc>
+<script>
+(async () => {
+  if (!document.title || !document.title.trim()) document.title = "POS Terminal Spec";
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  @page { margin: 0.5cm; }\n  figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    print-color-adjust: exact; -webkit-print-color-adjust: exact;\n    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  // Reveal content gated on scroll or visibility before printing. Lazy <img>,
+  // IntersectionObserver fade-ins, and collapsed <details> don't render while
+  // off-screen, so a long page would print with them blank or closed. Open
+  // every <details>, force native-lazy images eager, and scroll the document
+  // through its full height to trip lazy-load + IO; then wait (bounded) for the
+  // newly-triggered images. Inert for deck-stage (slides aren't scroll-gated).
+  try {
+    for (const d of document.querySelectorAll('details')) d.open = true;
+    for (const img of document.querySelectorAll('img[loading="lazy"]'))
+      img.loading = 'eager';
+    const scroller = document.scrollingElement || document.documentElement;
+    const full = Math.max(scroller.scrollHeight, document.body.scrollHeight);
+    const step = window.innerHeight || 800;
+    for (let y = 0; y <= full; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    window.scrollTo(0, 0);
+    await Promise.race([
+      Promise.all(
+        [...document.images].map((img) =>
+          img.complete
+            ? null
+            : new Promise((res) => {
+                img.addEventListener('load', res, { once: true });
+                img.addEventListener('error', res, { once: true });
+              })
+        )
+      ),
+      new Promise((r) => setTimeout(r, 4000)),
+    ]);
+  } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don't
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  // Re-append deck-stage's @page last so no author @page can add a margin and
+  // spill each full-bleed slide onto two sheets. Backstop for old copies.
+  if (ds) {
+    let pg = document.getElementById('deck-stage-print-page');
+    if (!pg) {
+      pg = document.createElement('style');
+      pg.textContent = '@page{size:' + (+ds.getAttribute('width') || 1920) +
+        'px ' + (+ds.getAttribute('height') || 1080) + 'px;margin:0}';
+    }
+    document.body.appendChild(pg);
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  // Relax break-inside on oversized elements. An element taller than a
+  // printable page can't honor break-inside: avoid — browsers either overflow
+  // it or push it whole to the next page, leaving a blank gap, then break it
+  // anyway at an arbitrary point. After the final layout (content revealed,
+  // animations jumped), find elements taller than a page that still compute
+  // break-inside: avoid and reset them to auto, so the browser breaks them at
+  // their children's boundaries instead (children keep their own avoid). PAGE_PX
+  // is a conservative portrait estimate at 96 CSS px/in — Letter/A4 usable
+  // height minus our 0.5in margins — so only clearly-oversized elements are
+  // touched and under-page elements still stay whole. Skipped for decks, whose
+  // slides are sized to the page.
+  try {
+    if (!document.querySelector('deck-stage')) {
+      const PAGE_PX = 1024;
+      // Our print defaults add a body padding inset only when we also zero the
+      // @page margin; computed style can't tell us (it reports screen media),
+      // so read the injected rule directly.
+      const defaults = document.querySelector('style[data-omelette-print-defaults]');
+      const pageInset = /body\s*\{[^}]*padding/.test(defaults ? defaults.textContent || '' : '');
+      const SEL = 'section,article,figure,table,pre,blockquote,[class~="card" i],[class~="page" i],[class~="sheet" i]';
+      for (const el of document.body.querySelectorAll(SEL)) {
+        if (el instanceof HTMLElement && el.offsetHeight > PAGE_PX) {
+          el.setAttribute('data-om-oversized', '');
+          // Fake-paged docs simulate sheets with over-tall break-after:page
+          // boxes; honoring the break spills half-blank pages and ends a
+          // colored box mid-sheet. Flow them, and (only when we own the page
+          // inset) drop the redundant padding/background via the rule below.
+          const cs = getComputedStyle(el);
+          if (cs.breakAfter === 'page' || cs.pageBreakAfter === 'always') {
+            el.setAttribute('data-om-fakepage', '');
+          }
+        }
+      }
+      const ost = document.createElement('style');
+      ost.textContent = '@media print{' +
+        '[data-om-oversized]{break-inside:auto !important;page-break-inside:auto !important}' +
+        '[data-om-fakepage]{break-after:auto !important;page-break-after:auto !important}' +
+        (pageInset ? '[data-om-fakepage]{padding:0 !important;background:none !important}' : '') +
+        '}';
+      document.head.appendChild(ost);
+    }
+  } catch (e) {}
+  // macOS Preview renders Skia-PDF Luminosity soft-masks as opaque grey boxes;
+  // swap the CSS that triggers them for Preview-safe forms.
+  try {
+    for (const el of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(el);
+
+      if (cs.boxShadow !== 'none' && cs.filter === 'none') {
+        const outs = [], kept = [];
+        for (const s of cs.boxShadow.split(/,(?![^(]*[)])/)) {
+          const t = s.trim();
+          const m = t.match(/^(rgba?[(][^)]+[)]) (-?[0-9.]+px) (-?[0-9.]+px) ([0-9.]+px) -?[0-9.]+px$/);
+          if (m && parseFloat(m[4]) > 0) outs.push('drop-shadow(' + m[2] + ' ' + m[3] + ' ' + m[4] + ' ' + m[1] + ')');
+          else kept.push(t);
+        }
+        if (outs.length) {
+          el.style.setProperty('filter', outs.join(' '), 'important');
+          el.style.setProperty('box-shadow', kept.join(', ') || 'none', 'important');
+        }
+      }
+
+      const mask = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : cs.webkitMaskImage;
+      if (mask && mask !== 'none' && cs.filter === 'none') el.style.setProperty('filter', 'opacity(1)', 'important');
+    }
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body>
+</html>
