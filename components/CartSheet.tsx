@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react";
 import { Pressable, Text, View } from "react-native";
 import {
   BottomSheetBackdrop,
@@ -22,6 +22,10 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
   const items = useCartStore((s) => s.items);
   const totals = computeTotals(items);
   const insets = useSafeAreaInsets();
+
+  // Memoized so the modal initialises correctly and present() works on the
+  // first tap (an inline array recreated each render can break the first open).
+  const snapPoints = useMemo(() => ["92%"], []);
 
   const localRef = useRef<BottomSheetModal>(null);
   const setRefs = useCallback(
@@ -53,7 +57,7 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
   return (
     <BottomSheetModal
       ref={setRefs}
-      snapPoints={["92%"]}
+      snapPoints={snapPoints}
       enableDynamicSizing={false}
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={{ backgroundColor: "#E0E0EA", width: 42, height: 5 }}

@@ -180,9 +180,10 @@ export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
             </Text>
           </View>
 
-          {/* Items list — flex:1 so it scrolls and the footer buttons stay visible */}
+          {/* Items list — flexShrink so it scrolls when tall yet still shows its
+              content on native (flex:1 inside a maxHeight parent collapses to 0). */}
           <ScrollView
-            style={{ flex: 1 }}
+            style={{ flexShrink: 1 }}
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 4 }}
             showsVerticalScrollIndicator={false}
           >
