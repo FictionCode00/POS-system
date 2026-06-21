@@ -1,6 +1,5 @@
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import { Text, View } from "react-native";
-import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryPills } from "@/components/CategoryPills";
 import { ProductGrid } from "@/components/ProductGrid";
@@ -11,8 +10,7 @@ import { colors } from "@/constants/theme";
 
 export function PosPhoneView() {
   const [query, setQuery] = useState("");
-  const sheetRef = useRef<BottomSheetModal>(null);
-  const openCart = useCallback(() => sheetRef.current?.present(), []);
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -53,8 +51,8 @@ export function PosPhoneView() {
         <ProductGrid variant="lg" searchQuery={query} />
       </View>
 
-      <FloatingCartPill onPress={openCart} bottom={12} />
-      <CartSheet ref={sheetRef} />
+      <FloatingCartPill onPress={() => setCartOpen(true)} bottom={12} />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} />
     </View>
   );
 }
