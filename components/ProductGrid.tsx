@@ -16,10 +16,15 @@ interface Props {
 // instantly on category switch or search.
 export function ProductGrid({ variant = "sm", searchQuery = "" }: Props) {
   const activeCategory = useCartStore((s) => s.activeCategory);
+  const hasItems = useCartStore((s) => s.items.length > 0);
   const [containerW, setContainerW] = useState(0);
 
   const cols = variant === "lg" ? 2 : 4;
   const gap = variant === "lg" ? 13 : 12;
+
+  // On phone the floating cart pill overlays the bottom of the grid when the
+  // cart has items — pad the list so the last row's add buttons aren't hidden.
+  const bottomPad = variant === "lg" && hasItems ? 96 : 16;
 
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -73,7 +78,7 @@ export function ProductGrid({ variant = "sm", searchQuery = "" }: Props) {
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 16 }}
+          contentContainerStyle={{ paddingBottom: bottomPad }}
         >
           <View
             style={{

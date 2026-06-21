@@ -115,9 +115,10 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
         <CustomerCrm />
       </View>
 
-      {/* Items */}
+      {/* Items — flex:1 so the list scrolls and the totals + PAY stay pinned/visible */}
       <BottomSheetScrollView
-        contentContainerStyle={{ paddingHorizontal: 20 }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 8 }}
         showsVerticalScrollIndicator={false}
       >
         {items.map((item) => {
