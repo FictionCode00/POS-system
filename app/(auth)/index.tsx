@@ -372,7 +372,9 @@ function PhoneAuth() {
           </Text>
         </View>
 
-        {/* Phone: no tab switcher — inline link at the bottom instead (spec §6.3/6.4) */}
+        {/* Login / Register tab switcher (matches rendered design 6.3/6.4) */}
+        <TabSwitcher tab={tab} onTabChange={setTab} />
+
         {tab === "login" ? (
           <PhoneLoginForm onSwitchToRegister={() => setTab("register")} />
         ) : (

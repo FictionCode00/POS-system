@@ -17,10 +17,18 @@ export function PosPhoneView() {
   return (
     <View style={{ flex: 1 }}>
       {/* Pinned header */}
-      <View style={{ paddingHorizontal: 18, paddingTop: 6, paddingBottom: 12, gap: 10 }}>
-        {/* Outlet switcher + avatar row */}
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <OutletSwitcher />
+      <View style={{ paddingHorizontal: 18, paddingTop: 6, paddingBottom: 12, gap: 12 }}>
+        {/* Title + outlet chip (left column) · avatar (right) — matches design 7.3/7.4 */}
+        <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <View style={{ flex: 1, gap: 6 }}>
+            <Text style={{ fontFamily: "BricolageGrotesque_700Bold", fontSize: 21, color: colors.neutral.ink }}>
+              Menu
+            </Text>
+            {/* Outlet chip sits directly below the title; its dropdown pushes content down */}
+            <View style={{ alignSelf: "flex-start" }}>
+              <OutletSwitcher />
+            </View>
+          </View>
           <View
             style={{
               width: 40,
@@ -35,23 +43,6 @@ export function PosPhoneView() {
               RA
             </Text>
           </View>
-        </View>
-        {/* Title */}
-        <View>
-          <Text
-            style={{
-              fontFamily: "SpaceGrotesk_400Regular",
-              fontSize: 10.5,
-              color: colors.neutral.muted,
-              textTransform: "uppercase",
-              letterSpacing: 1.05,
-            }}
-          >
-            Table 12 · Dine-in
-          </Text>
-          <Text style={{ fontFamily: "BricolageGrotesque_700Bold", fontSize: 21, color: colors.neutral.ink }}>
-            Menu
-          </Text>
         </View>
         <SearchBar value={query} onChangeText={setQuery} placeholder="Search dishes…" variant="lg" />
         <CategoryPills variant="lg" />
