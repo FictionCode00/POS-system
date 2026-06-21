@@ -3,184 +3,324 @@ import { Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/lib/icons";
 import { colors } from "@/constants/theme";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useOutletStore } from "@/store/outletStore";
 
-// Compact outlet-selector chip. Tapping opens a modal picker.
-// Used in both PosTabletView and PosPhoneView — one component, two placements.
+/**
+ * Multi-outlet selector.
+ * Tablet: absolute dropdown below the chip (overlays search bar via zIndex).
+ * Phone: in-flow dropdown that pushes content down (spec §07 — no modal on phone).
+ */
 export function OutletSwitcher() {
+  const { layout } = useBreakpoint();
+  return layout === "tablet" ? <TabletOutletSwitcher /> : <PhoneOutletSwitcher />;
+}
+
+// ─── Tablet: dropdown appears via Modal, positioned below the pill ─────────────
+
+function TabletOutletSwitcher() {
   const [open, setOpen] = useState(false);
   const { outlets, activeOutlet, setActiveOutlet } = useOutletStore();
-  const insets = useSafeAreaInsets();
 
   return (
-    <>
-      <Pressable
-        onPress={() => setOpen(true)}
-        style={({ pressed }) => ({
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 6,
-          backgroundColor: colors.neutral.white,
-          borderWidth: 1,
-          borderColor: colors.neutral.edge,
-          borderRadius: 10,
-          paddingVertical: 7,
-          paddingHorizontal: 11,
-          opacity: pressed ? 0.75 : 1,
-        })}
-      >
-        <View
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 99,
-            backgroundColor: colors.status.success,
-          }}
-        />
-        <Text
-          style={{
-            fontFamily: "SpaceGrotesk_600SemiBold",
-            fontSize: 13,
-            color: colors.neutral.ink,
-            maxWidth: 160,
-          }}
-          numberOfLines={1}
-        >
-          {activeOutlet.name}
-        </Text>
-        <Icon name="chevron-down" size={13} color={colors.neutral.muted} strokeWidth={2.2} />
-      </Pressable>
+    <View>
+      <OutletPill
+        name={activeOutlet.name}
+        open={open}
+        onPress={() => setOpen((v) => !v)}
+      />
 
+      {/* Dropdown as a Modal so it overlays the search row cleanly */}
       <Modal
         visible={open}
         transparent
         animationType="fade"
         onRequestClose={() => setOpen(false)}
       >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.4)",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Pressable style={{ flex: 1 }} onPress={() => setOpen(false)} />
-
+        <Pressable style={{ flex: 1 }} onPress={() => setOpen(false)}>
+          {/* Positioned dropdown — rendered inside the pressable overlay */}
           <View
             style={{
+              position: "absolute",
+              top: 110, // approx: header top padding + pill height
+              left: 22, // matches paddingHorizontal of PosTabletView header
               backgroundColor: colors.neutral.white,
-              borderTopLeftRadius: 22,
-              borderTopRightRadius: 22,
-              paddingBottom: insets.bottom + 16,
+              borderRadius: 13,
+              borderWidth: 1,
+              borderColor: colors.neutral.edge,
+              overflow: "hidden",
+              minWidth: 230,
+              shadowColor: "#000",
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 8,
             }}
           >
-            {/* Handle */}
-            <View style={{ alignItems: "center", paddingTop: 10, paddingBottom: 4 }}>
-              <View
-                style={{
-                  width: 38,
-                  height: 4,
-                  borderRadius: 99,
-                  backgroundColor: colors.neutral.line,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 20,
-                paddingTop: 10,
-                paddingBottom: 14,
-                borderBottomWidth: 1,
-                borderBottomColor: colors.neutral.hair,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "BricolageGrotesque_700Bold",
-                  fontSize: 18,
-                  color: colors.neutral.ink,
-                }}
-              >
-                Switch Outlet
-              </Text>
-            </View>
-
-            <View style={{ paddingHorizontal: 16, paddingTop: 10, gap: 6 }}>
-              {outlets.map((outlet) => {
-                const isActive = outlet.id === activeOutlet.id;
-                return (
-                  <Pressable
-                    key={outlet.id}
-                    onPress={() => {
-                      setActiveOutlet(outlet.id);
-                      setOpen(false);
+            {outlets.map((outlet, idx) => {
+              const isActive = outlet.id === activeOutlet.id;
+              return (
+                <Pressable
+                  key={outlet.id}
+                  onPress={() => {
+                    setActiveOutlet(outlet.id);
+                    setOpen(false);
+                  }}
+                  style={({ pressed }) => ({
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                    paddingHorizontal: 14,
+                    paddingVertical: 10,
+                    backgroundColor: isActive
+                      ? "#FFF2EF"
+                      : pressed
+                        ? colors.neutral.surface
+                        : colors.neutral.white,
+                    borderBottomWidth: idx < outlets.length - 1 ? 1 : 0,
+                    borderBottomColor: colors.neutral.hair,
+                  })}
+                >
+                  {isActive ? (
+                    <Icon name="check" size={13} color={colors.primary[600]} strokeWidth={2.4} />
+                  ) : (
+                    <Icon name="building" size={13} color={colors.neutral.muted} strokeWidth={1.8} />
+                  )}
+                  <Text
+                    style={{
+                      fontFamily: "SpaceGrotesk_600SemiBold",
+                      fontSize: 13.5,
+                      color: isActive ? colors.primary[600] : "#3a3a44",
+                      flex: 1,
                     }}
-                    style={({ pressed }) => ({
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 14,
-                      padding: 14,
-                      borderRadius: 14,
-                      backgroundColor: isActive
-                        ? colors.primary[50]
-                        : pressed
-                          ? colors.neutral.surface
-                          : "transparent",
-                    })}
                   >
+                    {outlet.name}
+                  </Text>
+                  {isActive && (
                     <View
                       style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 11,
-                        backgroundColor: isActive ? colors.primary[100] : colors.neutral.surface,
-                        alignItems: "center",
-                        justifyContent: "center",
+                        backgroundColor: "#FFE4DC",
+                        borderRadius: 5,
+                        paddingVertical: 2,
+                        paddingHorizontal: 7,
                       }}
                     >
-                      <Icon
-                        name="building"
-                        size={19}
-                        color={isActive ? colors.primary[600] : colors.neutral.muted}
-                      />
-                    </View>
-                    <View style={{ flex: 1 }}>
                       <Text
                         style={{
                           fontFamily: "SpaceGrotesk_600SemiBold",
-                          fontSize: 15,
-                          color: isActive ? colors.primary[600] : colors.neutral.ink,
+                          fontSize: 10.5,
+                          color: "#FF9980",
                         }}
                       >
-                        {outlet.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: "SpaceGrotesk_400Regular",
-                          fontSize: 12.5,
-                          color: colors.neutral.muted,
-                          marginTop: 2,
-                        }}
-                      >
-                        {outlet.address}
+                        Active
                       </Text>
                     </View>
-                    {isActive ? (
-                      <Icon
-                        name="check"
-                        size={17}
-                        color={colors.primary[600]}
-                        strokeWidth={2.5}
-                      />
-                    ) : null}
-                  </Pressable>
-                );
+                  )}
+                </Pressable>
+              );
+            })}
+            {/* Add outlet row */}
+            <Pressable
+              style={({ pressed }) => ({
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 10,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                backgroundColor: pressed ? colors.neutral.surface : colors.neutral.white,
+                borderTopWidth: 1,
+                borderTopColor: colors.neutral.hair,
               })}
-            </View>
+            >
+              <Icon name="plus" size={12} color={colors.neutral.muted} strokeWidth={2} />
+              <Text
+                style={{
+                  fontFamily: "SpaceGrotesk_400Regular",
+                  fontSize: 13,
+                  color: colors.neutral.muted,
+                }}
+              >
+                Add outlet…
+              </Text>
+            </Pressable>
           </View>
-        </View>
+        </Pressable>
       </Modal>
-    </>
+    </View>
+  );
+}
+
+// ─── Phone: in-flow dropdown pushes content down ──────────────────────────────
+
+function PhoneOutletSwitcher() {
+  const [open, setOpen] = useState(false);
+  const { outlets, activeOutlet, setActiveOutlet } = useOutletStore();
+
+  return (
+    <View>
+      <OutletPill
+        name={activeOutlet.name}
+        open={open}
+        onPress={() => setOpen((v) => !v)}
+      />
+
+      {/* In-flow dropdown — no modal, pushes content below it */}
+      {open && (
+        <View
+          style={{
+            marginTop: 6,
+            backgroundColor: colors.neutral.white,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.neutral.edge,
+            overflow: "hidden",
+            shadowColor: "#000",
+            shadowOpacity: 0.08,
+            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 4 },
+          }}
+        >
+          {outlets.map((outlet, idx) => {
+            const isActive = outlet.id === activeOutlet.id;
+            return (
+              <Pressable
+                key={outlet.id}
+                onPress={() => {
+                  setActiveOutlet(outlet.id);
+                  setOpen(false);
+                }}
+                style={({ pressed }) => ({
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 9,
+                  paddingHorizontal: 14,
+                  paddingVertical: 11,
+                  backgroundColor: isActive
+                    ? "#FFF2EF"
+                    : pressed
+                      ? colors.neutral.surface
+                      : colors.neutral.white,
+                  borderBottomWidth: idx < outlets.length - 1 ? 1 : 0,
+                  borderBottomColor: colors.neutral.hair,
+                })}
+              >
+                {isActive ? (
+                  <Icon name="check" size={12} color={colors.primary[600]} strokeWidth={2.4} />
+                ) : (
+                  <Icon name="building" size={12} color={colors.neutral.muted} strokeWidth={1.8} />
+                )}
+                <Text
+                  style={{
+                    fontFamily: "SpaceGrotesk_600SemiBold",
+                    fontSize: 13.5,
+                    color: isActive ? colors.primary[600] : "#3a3a44",
+                    flex: 1,
+                  }}
+                >
+                  {outlet.name}
+                </Text>
+                {isActive && (
+                  <View
+                    style={{
+                      backgroundColor: "#FFE4DC",
+                      borderRadius: 5,
+                      paddingVertical: 2,
+                      paddingHorizontal: 6,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "SpaceGrotesk_600SemiBold",
+                        fontSize: 10,
+                        color: "#FF9980",
+                      }}
+                    >
+                      Active
+                    </Text>
+                  </View>
+                )}
+              </Pressable>
+            );
+          })}
+          <Pressable
+            style={({ pressed }) => ({
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 9,
+              paddingHorizontal: 14,
+              paddingVertical: 11,
+              backgroundColor: pressed ? colors.neutral.surface : colors.neutral.white,
+              borderTopWidth: 1,
+              borderTopColor: colors.neutral.hair,
+            })}
+          >
+            <Icon name="plus" size={12} color={colors.neutral.muted} strokeWidth={2} />
+            <Text
+              style={{
+                fontFamily: "SpaceGrotesk_400Regular",
+                fontSize: 13,
+                color: colors.neutral.muted,
+              }}
+            >
+              Add outlet…
+            </Text>
+          </Pressable>
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ─── Shared pill trigger ──────────────────────────────────────────────────────
+
+function OutletPill({
+  name,
+  open,
+  onPress,
+}: {
+  name: string;
+  open: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        backgroundColor: open ? "#FFF2EF" : colors.neutral.white,
+        borderWidth: open ? 1.5 : 1,
+        borderColor: open ? colors.primary[600] : colors.neutral.edge,
+        borderRadius: 12,
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        opacity: pressed ? 0.85 : 1,
+      })}
+    >
+      <Icon
+        name="building"
+        size={14}
+        color={open ? colors.primary[600] : colors.neutral.muted}
+        strokeWidth={1.8}
+      />
+      <Text
+        style={{
+          fontFamily: "SpaceGrotesk_600SemiBold",
+          fontSize: 13.5,
+          color: open ? colors.primary[600] : colors.neutral.ink,
+          maxWidth: 160,
+        }}
+        numberOfLines={1}
+      >
+        {name}
+      </Text>
+      <Icon
+        name={open ? "chevron-up" : "chevron-down"}
+        size={13}
+        color={open ? colors.primary[600] : colors.neutral.muted}
+        strokeWidth={2.2}
+      />
+    </Pressable>
   );
 }

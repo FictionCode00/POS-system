@@ -3,12 +3,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/lib/icons";
 import { colors } from "@/constants/theme";
 import { PRODUCT_MAP } from "@/data/dummy";
+import { useOutletStore } from "@/store/outletStore";
 import type { CartItem } from "@/types";
 
 interface KOTItem {
   name: string;
   qty: number;
   category: string;
+  isVeg: boolean;
 }
 
 export interface KOTData {
@@ -16,13 +18,18 @@ export interface KOTData {
   kotNumber: string;
   tableNumber: string;
   timestamp: string;
+  outletName: string;
   items: KOTItem[];
 }
 
-export function generateKOT(cartItems: CartItem[]): KOTData {
+export function generateKOT(cartItems: CartItem[], outletName: string): KOTData {
   const now = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
-  const timestamp = `${pad(now.getHours())}:${pad(now.getMinutes())} · ${now.toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}`;
+  const timestamp = `${now.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })} · ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
   const items: KOTItem[] = cartItems.map((ci) => {
     const p = PRODUCT_MAP[ci.productId];
@@ -30,14 +37,16 @@ export function generateKOT(cartItems: CartItem[]): KOTData {
       name: p?.name ?? ci.productId,
       qty: ci.qty,
       category: p?.category ?? "—",
+      isVeg: p?.isVeg ?? true,
     };
   });
 
   return {
     orderNumber: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
-    kotNumber: `KOT-${Math.floor(10 + Math.random() * 90)}`,
+    kotNumber: `KOT-${Math.floor(1000 + Math.random() * 9000)}`,
     tableNumber: "12",
     timestamp,
+    outletName,
     items,
   };
 }
@@ -49,12 +58,17 @@ interface Props {
   onClose: () => void;
 }
 
-// Print-preview modal for a Kitchen Order Ticket. Prices are intentionally
-// excluded — kitchen staff only need item names and quantities.
+/**
+ * KOT print-preview bottom sheet (§09).
+ * Utilitarian style: dark `#1A1A22` header bar, dashed dividers, ALL-CAPS item names.
+ * No prices — kitchen staff only need names, quantities, and modifiers.
+ */
 export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
   const insets = useSafeAreaInsets();
 
   if (!kotData) return null;
+
+  const totalQty = kotData.items.reduce((sum, i) => sum + i.qty, 0);
 
   return (
     <Modal
@@ -63,197 +77,195 @@ export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
       transparent
       onRequestClose={onClose}
     >
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.55)",
-          justifyContent: "flex-end",
-        }}
-      >
+      <View style={{ flex: 1, backgroundColor: "rgba(20,20,30,0.54)", justifyContent: "flex-end" }}>
         <Pressable style={{ flex: 1 }} onPress={onClose} />
 
         <View
           style={{
-            backgroundColor: colors.neutral.white,
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            paddingBottom: insets.bottom + 16,
-            maxHeight: "85%",
+            backgroundColor: "#FAFAFA",
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            overflow: "hidden",
+            maxHeight: "88%",
+            paddingBottom: insets.bottom + 12,
           }}
         >
-          {/* Handle */}
+          {/* Dark header bar */}
           <View
             style={{
-              alignItems: "center",
-              paddingTop: 10,
-              paddingBottom: 6,
-            }}
-          >
-            <View
-              style={{
-                width: 42,
-                height: 5,
-                borderRadius: 99,
-                backgroundColor: colors.neutral.line,
-              }}
-            />
-          </View>
-
-          {/* Header */}
-          <View
-            style={{
-              paddingHorizontal: 22,
-              paddingTop: 6,
+              backgroundColor: "#1A1A22",
+              paddingHorizontal: 24,
+              paddingTop: 20,
               paddingBottom: 16,
               flexDirection: "row",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
-              borderBottomWidth: 1,
-              borderBottomColor: colors.neutral.hair,
             }}
           >
             <View>
               <Text
                 style={{
-                  fontFamily: "BricolageGrotesque_700Bold",
-                  fontSize: 20,
-                  color: colors.neutral.ink,
+                  fontFamily: "SpaceGrotesk_400Regular",
+                  fontSize: 9.5,
+                  letterSpacing: 2.2,
+                  textTransform: "uppercase",
+                  color: "#6a6a78",
+                  marginBottom: 4,
                 }}
               >
                 Kitchen Order Ticket
               </Text>
               <Text
                 style={{
-                  fontFamily: "SpaceGrotesk_400Regular",
-                  fontSize: 12.5,
-                  color: colors.neutral.muted,
-                  marginTop: 2,
+                  fontFamily: "BricolageGrotesque_700Bold",
+                  fontSize: 24,
+                  letterSpacing: -0.3,
+                  color: colors.neutral.white,
                 }}
               >
-                Review before sending to kitchen
+                #{kotData.kotNumber}
               </Text>
             </View>
-            <Pressable
-              onPress={onClose}
-              hitSlop={8}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 999,
-                backgroundColor: colors.neutral.surface,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Icon name="x" size={15} color={colors.neutral.body} strokeWidth={2.2} />
-            </Pressable>
+            <View style={{ alignItems: "flex-end" }}>
+              <Text
+                style={{
+                  fontFamily: "SpaceGrotesk_700Bold",
+                  fontSize: 15,
+                  color: colors.primary[600],
+                }}
+              >
+                Table {kotData.tableNumber}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "SpaceGrotesk_400Regular",
+                  fontSize: 11.5,
+                  color: "#9a9aa8",
+                  marginTop: 3,
+                }}
+              >
+                Dine-in · {totalQty} {totalQty === 1 ? "item" : "items"}
+              </Text>
+            </View>
           </View>
 
-          {/* KOT slip body */}
+          {/* Outlet + timestamp strip with dashed bottom border */}
+          <View
+            style={{
+              backgroundColor: "#222232",
+              paddingHorizontal: 24,
+              paddingVertical: 9,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              borderBottomWidth: 2,
+              borderBottomColor: "#3a3a48",
+              borderStyle: "dashed",
+            }}
+          >
+            <Text style={{ fontFamily: "SpaceGrotesk_400Regular", fontSize: 11.5, color: "#9a9aa8" }}>
+              {kotData.outletName}
+            </Text>
+            <Text style={{ fontFamily: "SpaceGrotesk_400Regular", fontSize: 11.5, color: "#9a9aa8" }}>
+              {kotData.timestamp}
+            </Text>
+          </View>
+
+          {/* Items list */}
           <ScrollView
-            contentContainerStyle={{ paddingHorizontal: 22, paddingTop: 16, paddingBottom: 4 }}
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 4 }}
             showsVerticalScrollIndicator={false}
           >
-            {/* Metadata row */}
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 10,
-                marginBottom: 18,
-                flexWrap: "wrap",
-              }}
-            >
-              <MetaBadge label="Table" value={kotData.tableNumber} />
-              <MetaBadge label="KOT" value={kotData.kotNumber} />
-              <MetaBadge label="Order" value={kotData.orderNumber} />
-              <MetaBadge label="Time" value={kotData.timestamp} />
-            </View>
-
-            {/* Divider — dashed ticket style */}
-            <View
-              style={{
-                borderTopWidth: 1,
-                borderTopColor: colors.neutral.line,
-                borderStyle: "dashed",
-                marginBottom: 16,
-              }}
-            />
-
-            {/* Items */}
-            <View style={{ gap: 12 }}>
-              {kotData.items.map((item, idx) => (
+            {kotData.items.map((item, idx) => (
+              <View
+                key={idx}
+                style={{
+                  paddingVertical: 9,
+                  borderBottomWidth: idx < kotData.items.length - 1 ? 1 : 0,
+                  borderBottomColor: "#ECECF3",
+                }}
+              >
+                {/* Qty × Name row */}
                 <View
-                  key={idx}
                   style={{
                     flexDirection: "row",
-                    alignItems: "flex-start",
-                    gap: 12,
+                    alignItems: "baseline",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <View
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      backgroundColor: colors.primary[50],
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <View style={{ flexDirection: "row", alignItems: "baseline", gap: 0 }}>
                     <Text
                       style={{
                         fontFamily: "SpaceGrotesk_700Bold",
-                        fontSize: 15,
-                        color: colors.primary[600],
+                        fontSize: 16,
+                        color: colors.neutral.ink,
                       }}
                     >
                       {item.qty}×
                     </Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
                     <Text
                       style={{
-                        fontFamily: "SpaceGrotesk_600SemiBold",
+                        fontFamily: "SpaceGrotesk_700Bold",
                         fontSize: 15,
                         color: colors.neutral.ink,
+                        textTransform: "uppercase",
+                        letterSpacing: 0.4,
+                        marginLeft: 10,
                       }}
                     >
                       {item.name}
                     </Text>
+                  </View>
+                  {/* Veg/Non-veg tag */}
+                  <View
+                    style={{
+                      backgroundColor: "#EEEEEE",
+                      borderRadius: 4,
+                      paddingVertical: 2,
+                      paddingHorizontal: 7,
+                    }}
+                  >
                     <Text
                       style={{
                         fontFamily: "SpaceGrotesk_400Regular",
-                        fontSize: 12,
+                        fontSize: 10.5,
+                        textTransform: "uppercase",
+                        letterSpacing: 1,
                         color: colors.neutral.muted,
-                        marginTop: 1,
                       }}
                     >
-                      {item.category}
+                      {item.isVeg ? "Veg" : "Non-veg"}
                     </Text>
                   </View>
                 </View>
-              ))}
-            </View>
+                {/* Modifier hint — static placeholder */}
+                <Text
+                  style={{
+                    fontFamily: "SpaceGrotesk_400Regular",
+                    fontSize: 12,
+                    color: "#9a9aa8",
+                    marginTop: 4,
+                    paddingLeft: 26,
+                  }}
+                >
+                  {"→"} {item.category}
+                </Text>
+              </View>
+            ))}
 
+            {/* Dashed closing rule */}
             <View
               style={{
-                borderTopWidth: 1,
-                borderTopColor: colors.neutral.line,
+                borderTopWidth: 2,
+                borderTopColor: "#E0E0EA",
                 borderStyle: "dashed",
-                marginTop: 16,
+                marginTop: 12,
                 marginBottom: 4,
               }}
             />
           </ScrollView>
 
           {/* Actions */}
-          <View
-            style={{
-              paddingHorizontal: 22,
-              paddingTop: 14,
-              gap: 10,
-            }}
-          >
+          <View style={{ paddingHorizontal: 24, paddingTop: 12, gap: 8 }}>
             <Pressable
               onPress={onConfirm}
               style={({ pressed }) => ({
@@ -285,7 +297,7 @@ export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
             <Pressable
               onPress={onClose}
               style={({ pressed }) => ({
-                height: 46,
+                height: 44,
                 borderRadius: 12,
                 alignItems: "center",
                 justifyContent: "center",
@@ -306,42 +318,5 @@ export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
         </View>
       </View>
     </Modal>
-  );
-}
-
-function MetaBadge({ label, value }: { label: string; value: string }) {
-  return (
-    <View
-      style={{
-        backgroundColor: colors.neutral.surface,
-        borderRadius: 8,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        flexDirection: "row",
-        gap: 5,
-        alignItems: "center",
-      }}
-    >
-      <Text
-        style={{
-          fontFamily: "SpaceGrotesk_400Regular",
-          fontSize: 11,
-          color: colors.neutral.muted,
-          textTransform: "uppercase",
-          letterSpacing: 0.7,
-        }}
-      >
-        {label}
-      </Text>
-      <Text
-        style={{
-          fontFamily: "SpaceGrotesk_600SemiBold",
-          fontSize: 12.5,
-          color: colors.neutral.ink,
-        }}
-      >
-        {value}
-      </Text>
-    </View>
   );
 }

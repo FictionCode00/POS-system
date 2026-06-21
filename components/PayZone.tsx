@@ -6,6 +6,7 @@ import { KitchenSlip, generateKOT } from "@/components/KitchenSlip";
 import { colors } from "@/constants/theme";
 import { rupees } from "@/lib/format";
 import { useCartStore } from "@/store/cartStore";
+import { useOutletStore } from "@/store/outletStore";
 import type { BillTotals, PaymentMethod } from "@/types";
 
 const METHODS: PaymentMethod[] = ["cash", "upi", "qr"];
@@ -22,10 +23,11 @@ export function PayZone({ totals, variant = "sm" }: Props) {
   const setPayment = useCartStore((s) => s.setPayment);
   const clear = useCartStore((s) => s.clear);
   const items = useCartStore((s) => s.items);
+  const activeOutlet = useOutletStore((s) => s.activeOutlet);
   const disabled = totals.qtyCount === 0;
 
   const [kotVisible, setKotVisible] = useState(false);
-  const kotData = kotVisible ? generateKOT(items) : null;
+  const kotData = kotVisible ? generateKOT(items, activeOutlet.name) : null;
 
   const onPay = () => {
     if (disabled) return;
