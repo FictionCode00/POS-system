@@ -15,9 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "bundleIdentifier": "com.restaurantos.pos"
     },
     "android": {
+      "package": "com.restaurantos.pos",
       "adaptiveIcon": {
         "backgroundColor": "#FAFAFD",
         "foregroundImage": "./assets/android-icon-foreground.png",
