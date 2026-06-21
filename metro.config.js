@@ -1,6 +1,5 @@
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
 
-const config = getDefaultConfig(__dirname);
-
-module.exports = withNativeWind(config, { input: "./global.css" });
+// Plain Metro config. NativeWind is not used (the app styles with inline
+// `style` objects only), so no withNativeWind / global.css injection.
+module.exports = getDefaultConfig(__dirname);
