@@ -3,12 +3,13 @@ import { Icon } from "@/lib/icons";
 import { CartItemRow } from "@/components/CartItemRow";
 import { BillSummary } from "@/components/BillSummary";
 import { PayZone } from "@/components/PayZone";
+import { CustomerCrm } from "@/components/CustomerCrm";
 import { colors } from "@/constants/theme";
 import { PRODUCT_MAP } from "@/data/dummy";
 import { computeTotals, useCartStore } from "@/store/cartStore";
 
-// Tablet right column: persistent cart. Scrollable item list, sticky subtotal
-// block + sticky PAY zone. The empty state shows a bag illustration.
+// Tablet right column: persistent cart with CRM lookup, scrollable item list,
+// sticky totals, and sticky PAY zone.
 export function CartPanel() {
   const items = useCartStore((s) => s.items);
   const clear = useCartStore((s) => s.clear);
@@ -22,6 +23,7 @@ export function CartPanel() {
         backgroundColor: colors.neutral.canvas,
         borderLeftWidth: 1,
         borderLeftColor: colors.neutral.line,
+        flex: 1,
       }}
     >
       {/* Header */}
@@ -61,6 +63,18 @@ export function CartPanel() {
             </Text>
           </Pressable>
         ) : null}
+      </View>
+
+      {/* CRM section */}
+      <View
+        style={{
+          paddingHorizontal: 18,
+          paddingVertical: 12,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.neutral.hair,
+        }}
+      >
+        <CustomerCrm />
       </View>
 
       {/* Items / empty */}

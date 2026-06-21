@@ -29,7 +29,11 @@ export type IconName =
   | "leaf"
   | "dosa"
   | "croissant"
-  | "cake";
+  | "cake"
+  // general UI
+  | "x"
+  | "user"
+  | "building";
 
 interface IconProps {
   name: IconName;
@@ -177,6 +181,22 @@ function renderPaths(name: IconName): React.ReactNode {
         <>
           <Path d="M6 11h12l-1 9a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1l-1-9Z" />
           <Path d="M6 11a6 6 0 0 1 12 0" />
+        </>
+      );
+    case "x":
+      return <Path d="M18 6 6 18M6 6l12 12" />;
+    case "user":
+      return (
+        <>
+          <Circle cx="12" cy="8" r="4" />
+          <Path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+        </>
+      );
+    case "building":
+      return (
+        <>
+          <Rect x="3" y="3" width="18" height="18" rx="2" />
+          <Path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2" />
         </>
       );
     default:

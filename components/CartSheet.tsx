@@ -10,18 +10,17 @@ import { Icon } from "@/lib/icons";
 import { CartItemRow } from "@/components/CartItemRow";
 import { BillSummary } from "@/components/BillSummary";
 import { PayZone } from "@/components/PayZone";
+import { CustomerCrm } from "@/components/CustomerCrm";
 import { colors } from "@/constants/theme";
 import { PRODUCT_MAP } from "@/data/dummy";
 import { computeTotals, useCartStore } from "@/store/cartStore";
 
-// Phone: the expanded cart. A full-height bottom sheet (slides up over a scrim)
-// with a scrollable item list, sticky totals and PAY zone. Collapsed by default
-// — never shown at the same time as the floating pill.
+// Phone: expanded cart as a bottom sheet with CRM lookup, scrollable items,
+// sticky totals, and PAY zone.
 export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
   const items = useCartStore((s) => s.items);
   const totals = computeTotals(items);
 
-  // Keep a local ref too, so we can auto-dismiss when the cart empties.
   const localRef = useRef<BottomSheetModal>(null);
   const setRefs = useCallback(
     (node: BottomSheetModal | null) => {
@@ -52,7 +51,7 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
   return (
     <BottomSheetModal
       ref={setRefs}
-      snapPoints={["90%"]}
+      snapPoints={["92%"]}
       enableDynamicSizing={false}
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={{ backgroundColor: "#E0E0EA", width: 42, height: 5 }}
@@ -104,6 +103,18 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
         </Pressable>
       </View>
 
+      {/* CRM section */}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.neutral.hair,
+        }}
+      >
+        <CustomerCrm />
+      </View>
+
       {/* Items */}
       <BottomSheetScrollView
         contentContainerStyle={{ paddingHorizontal: 20 }}
@@ -139,5 +150,4 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
 
 CartSheet.displayName = "CartSheet";
 
-// Re-export the type so screens can type their ref.
 export type CartSheetRef = BottomSheetModal;

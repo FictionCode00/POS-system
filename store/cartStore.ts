@@ -9,10 +9,21 @@ import type {
 import { PRODUCT_MAP } from "@/data/dummy";
 import { GST_SPLIT } from "@/constants/theme";
 
+// Mock CRM lookup: only this number resolves to a known customer.
+const MOCK_CUSTOMERS: Record<string, { name: string; points: number }> = {
+  "9999999999": { name: "Priya S.", points: 240 },
+  "8888888888": { name: "Arjun M.", points: 90 },
+};
+
 interface CartState {
   items: CartItem[];
   activeCategory: ProductCategory;
   payment: PaymentMethod | null;
+
+  // CRM / Loyalty
+  customerPhone: string;
+  customerName: string | null;
+  loyaltyPoints: number | null;
 
   addItem: (product: Product) => void;
   increment: (productId: string) => void;
@@ -21,12 +32,20 @@ interface CartState {
   clear: () => void;
   setCategory: (category: ProductCategory) => void;
   setPayment: (method: PaymentMethod) => void;
+
+  setCustomerPhone: (phone: string) => void;
+  lookupCustomer: () => void;
+  clearCustomer: () => void;
 }
 
-export const useCartStore = create<CartState>((set) => ({
+export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   activeCategory: "Coffee",
-  payment: "cash", // Cash is pre-highlighted once the cart has items (per spec 2.2)
+  payment: "cash",
+
+  customerPhone: "",
+  customerName: null,
+  loyaltyPoints: null,
 
   addItem: (product) =>
     set((state) => {
@@ -55,7 +74,6 @@ export const useCartStore = create<CartState>((set) => ({
 
   decrement: (productId) =>
     set((state) => ({
-      // Drops to zero → row is removed.
       items: state.items
         .map((i) => (i.productId === productId ? { ...i, qty: i.qty - 1 } : i))
         .filter((i) => i.qty > 0),
@@ -66,16 +84,38 @@ export const useCartStore = create<CartState>((set) => ({
       items: state.items.filter((i) => i.productId !== productId),
     })),
 
-  clear: () => set({ items: [] }),
+  clear: () =>
+    set({
+      items: [],
+      customerPhone: "",
+      customerName: null,
+      loyaltyPoints: null,
+    }),
 
   setCategory: (category) => set({ activeCategory: category }),
 
   setPayment: (method) => set({ payment: method }),
+
+  setCustomerPhone: (phone) =>
+    set({ customerPhone: phone, customerName: null, loyaltyPoints: null }),
+
+  lookupCustomer: () => {
+    const { customerPhone } = get();
+    const match = MOCK_CUSTOMERS[customerPhone.trim()];
+    if (match) {
+      set({ customerName: match.name, loyaltyPoints: match.points });
+    } else {
+      set({ customerName: "", loyaltyPoints: null });
+    }
+  },
+
+  clearCustomer: () =>
+    set({ customerPhone: "", customerName: null, loyaltyPoints: null }),
 }));
 
 /**
  * Derive the bill from cart items + the product lookup.
- * Totals are computed, never stored (per spec). Rupee math, rounded to paise.
+ * Totals are computed, never stored. Rupee math, rounded to paise.
  */
 export function computeTotals(items: CartItem[]): BillTotals {
   let subtotal = 0;

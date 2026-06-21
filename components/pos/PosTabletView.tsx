@@ -4,11 +4,10 @@ import { SearchBar } from "@/components/SearchBar";
 import { CategoryPills } from "@/components/CategoryPills";
 import { ProductGrid } from "@/components/ProductGrid";
 import { CartPanel } from "@/components/CartPanel";
+import { OutletSwitcher } from "@/components/OutletSwitcher";
 import { colors } from "@/constants/theme";
 import { useCartStore } from "@/store/cartStore";
 
-// POS Terminal — tablet. Center column (pinned search + pills, scrolling grid)
-// sits beside the persistent cart panel.
 export function PosTabletView() {
   const [query, setQuery] = useState("");
   const hasItems = useCartStore((s) => s.items.length > 0);
@@ -17,7 +16,7 @@ export function PosTabletView() {
     <View style={{ flex: 1, flexDirection: "row" }}>
       {/* Center column */}
       <View style={{ flex: 1, minWidth: 0 }}>
-        {/* Pinned header: search + table/KOT + pills */}
+        {/* Pinned header */}
         <View
           style={{
             paddingHorizontal: 22,
@@ -28,8 +27,11 @@ export function PosTabletView() {
             gap: 14,
           }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-            <SearchBar value={query} onChangeText={setQuery} />
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <OutletSwitcher />
+            <View style={{ flex: 1 }}>
+              <SearchBar value={query} onChangeText={setQuery} />
+            </View>
             <MetaChip label="Table" value="12" />
             {hasItems ? <MetaChip label="KOT" value="#4821" /> : null}
           </View>
