@@ -1,9 +1,8 @@
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Modal, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/lib/icons";
 import { colors } from "@/constants/theme";
 import { PRODUCT_MAP } from "@/data/dummy";
-import { useOutletStore } from "@/store/outletStore";
 import type { CartItem } from "@/types";
 
 interface KOTItem {
@@ -62,9 +61,20 @@ interface Props {
  * KOT print-preview bottom sheet (§09).
  * Utilitarian style: dark `#1A1A22` header bar, dashed dividers, ALL-CAPS item names.
  * No prices — kitchen staff only need names, quantities, and modifiers.
+ * Footer: Print (secondary, paired thermal) + Send to Kitchen (primary, confirms order).
  */
 export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
   const insets = useSafeAreaInsets();
+
+  const onPrint = () => {
+    const msg = "Sent to paired thermal printer (80mm).";
+    if (Platform.OS === "web") {
+      // eslint-disable-next-line no-alert
+      window.alert(msg);
+    } else {
+      Alert.alert("Printing KOT", msg);
+    }
+  };
 
   if (!kotData) return null;
 
@@ -252,68 +262,79 @@ export function KitchenSlip({ visible, kotData, onConfirm, onClose }: Props) {
               </View>
             ))}
 
-            {/* Dashed closing rule */}
-            <View
-              style={{
-                borderTopWidth: 2,
-                borderTopColor: "#E0E0EA",
-                borderStyle: "dashed",
-                marginTop: 12,
-                marginBottom: 4,
-              }}
-            />
           </ScrollView>
 
-          {/* Actions */}
-          <View style={{ paddingHorizontal: 24, paddingTop: 12, gap: 8 }}>
-            <Pressable
-              onPress={onConfirm}
-              style={({ pressed }) => ({
-                height: 54,
-                backgroundColor: colors.primary[600],
-                borderRadius: 14,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                opacity: pressed ? 0.88 : 1,
-                shadowColor: colors.primary[600],
-                shadowOpacity: 0.28,
-                shadowRadius: 16,
-                shadowOffset: { width: 0, height: 6 },
-              })}
-            >
-              <Icon name="check" size={18} color={colors.neutral.white} strokeWidth={2.5} />
-              <Text
-                style={{
-                  fontFamily: "SpaceGrotesk_700Bold",
-                  fontSize: 16,
-                  color: colors.neutral.white,
-                }}
+          {/* Footer: waiter line + Print / Send to Kitchen (§09) */}
+          <View
+            style={{
+              paddingHorizontal: 24,
+              paddingTop: 14,
+              borderTopWidth: 2,
+              borderTopColor: "#E0E0EA",
+              borderStyle: "dashed",
+              gap: 12,
+            }}
+          >
+            <Text style={{ fontFamily: "SpaceGrotesk_400Regular", fontSize: 12, color: "#9a9aa8" }}>
+              Waiter · Rahul A.
+            </Text>
+
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              {/* Print — secondary (sends to paired thermal) */}
+              <Pressable
+                onPress={onPrint}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  height: 52,
+                  backgroundColor: "#F0F0F5",
+                  borderRadius: 13,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  opacity: pressed ? 0.8 : 1,
+                })}
               >
-                Confirm &amp; Pay
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={onClose}
-              style={({ pressed }) => ({
-                height: 44,
-                borderRadius: 12,
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: pressed ? 0.7 : 1,
-              })}
-            >
-              <Text
-                style={{
-                  fontFamily: "SpaceGrotesk_500Medium",
-                  fontSize: 14,
-                  color: colors.neutral.muted,
-                }}
+                <Text
+                  style={{
+                    fontFamily: "SpaceGrotesk_600SemiBold",
+                    fontSize: 14,
+                    color: "#6a6a78",
+                  }}
+                >
+                  Print
+                </Text>
+              </Pressable>
+
+              {/* Send to Kitchen — primary (confirms + completes payment) */}
+              <Pressable
+                onPress={onConfirm}
+                style={({ pressed }) => ({
+                  flex: 2,
+                  height: 52,
+                  backgroundColor: colors.primary[600],
+                  borderRadius: 13,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  opacity: pressed ? 0.88 : 1,
+                  shadowColor: colors.primary[600],
+                  shadowOpacity: 0.28,
+                  shadowRadius: 16,
+                  shadowOffset: { width: 0, height: 6 },
+                })}
               >
-                Edit Order
-              </Text>
-            </Pressable>
+                <Text
+                  style={{
+                    fontFamily: "SpaceGrotesk_700Bold",
+                    fontSize: 15,
+                    color: colors.neutral.white,
+                  }}
+                >
+                  Send to Kitchen
+                </Text>
+                <Icon name="arrow-right" size={16} color={colors.neutral.white} strokeWidth={2.2} />
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>

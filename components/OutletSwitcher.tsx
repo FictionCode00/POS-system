@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/lib/icons";
 import { colors } from "@/constants/theme";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
@@ -20,15 +19,29 @@ export function OutletSwitcher() {
 
 function TabletOutletSwitcher() {
   const [open, setOpen] = useState(false);
+  const [anchor, setAnchor] = useState({ x: 22, y: 110 });
+  const pillRef = useRef<View>(null);
   const { outlets, activeOutlet, setActiveOutlet } = useOutletStore();
+
+  const openDropdown = () => {
+    // Measure the pill's real screen position so the dropdown anchors below it.
+    pillRef.current?.measureInWindow((x, y, _w, h) => {
+      setAnchor({ x, y: y + h + 6 });
+      setOpen(true);
+    });
+    // Fallback in case measure doesn't fire (e.g. web): open anyway.
+    setOpen(true);
+  };
 
   return (
     <View>
-      <OutletPill
-        name={activeOutlet.name}
-        open={open}
-        onPress={() => setOpen((v) => !v)}
-      />
+      <View ref={pillRef} collapsable={false}>
+        <OutletPill
+          name={activeOutlet.name}
+          open={open}
+          onPress={() => (open ? setOpen(false) : openDropdown())}
+        />
+      </View>
 
       {/* Dropdown as a Modal so it overlays the search row cleanly */}
       <Modal
@@ -38,12 +51,12 @@ function TabletOutletSwitcher() {
         onRequestClose={() => setOpen(false)}
       >
         <Pressable style={{ flex: 1 }} onPress={() => setOpen(false)}>
-          {/* Positioned dropdown — rendered inside the pressable overlay */}
+          {/* Positioned dropdown — anchored to the measured pill position */}
           <View
             style={{
               position: "absolute",
-              top: 110, // approx: header top padding + pill height
-              left: 22, // matches paddingHorizontal of PosTabletView header
+              top: anchor.y,
+              left: anchor.x,
               backgroundColor: colors.neutral.white,
               borderRadius: 13,
               borderWidth: 1,
