@@ -6,6 +6,7 @@ import {
   BottomSheetScrollView,
   type BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/lib/icons";
 import { CartItemRow } from "@/components/CartItemRow";
 import { BillSummary } from "@/components/BillSummary";
@@ -20,6 +21,7 @@ import { computeTotals, useCartStore } from "@/store/cartStore";
 export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
   const items = useCartStore((s) => s.items);
   const totals = computeTotals(items);
+  const insets = useSafeAreaInsets();
 
   const localRef = useRef<BottomSheetModal>(null);
   const setRefs = useCallback(
@@ -141,8 +143,8 @@ export const CartSheet = forwardRef<BottomSheetModal>((_props, ref) => {
         <BillSummary totals={totals} />
       </View>
 
-      {/* PAY zone */}
-      <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 26 }}>
+      {/* PAY zone — clear the Android gesture bar / iOS home indicator */}
+      <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(insets.bottom, 16) + 10 }}>
         <PayZone totals={totals} variant="lg" />
       </View>
     </BottomSheetModal>
